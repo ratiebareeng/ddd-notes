@@ -3,6 +3,7 @@ import 'package:dartz/dartz.dart';
 import 'package:ddd_notes/domain/auth/i_auth_facade.dart';
 import 'package:ddd_notes/domain/auth/value_objects.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:injectable/injectable.dart';
 
 import '../../../domain/auth/auth_failure.dart';
 
@@ -10,16 +11,13 @@ part 'sign_in_form_bloc.freezed.dart';
 part 'sign_in_form_event.dart';
 part 'sign_in_form_state.dart';
 
+@injectable
 class SignInFormBloc extends Bloc<SignInFormEvent, SignInFormState> {
   final IAuthFacade _authFacade;
 
   SignInFormState get initialState => SignInFormState.initial();
 
-  SignInFormBloc(this._authFacade) : super(SignInFormState.initial()) {
-    on<SignInFormEvent>((event, emit) {
-      // TODO: implement event handler
-    });
-  }
+  SignInFormBloc(this._authFacade) : super(SignInFormState.initial());
 
   @override
   Stream<SignInFormState> mapEventToState(
