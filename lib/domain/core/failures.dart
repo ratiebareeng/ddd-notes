@@ -25,13 +25,15 @@ abstract class ValueFailure<T> with _$ValueFailure<T> {
     required T failedValue,
     required int maxLength,
   }) = ExceedingLength<T>;
-  // note body and todo body cannot be empty
+  // note body or todo body cannot be empty
   const factory ValueFailure.empty({required T failedValue}) = Empty<T>;
   // todo body cannot be multiline
   const factory ValueFailure.multiline({required T failedValue}) = Multiline<T>;
   //  list too long failure > 3 todos
-  const factory ValueFailure.listTooLong({required T failedValue}) =
-      ListTooLong<T>;
+  const factory ValueFailure.listTooLong({
+    required T failedValue,
+    required int max,
+  }) = ListTooLong<T>;
 }
 
 /// implementation
