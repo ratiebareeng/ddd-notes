@@ -1,4 +1,6 @@
-import 'package:bloc/bloc.dart';
+import 'dart:developer';
+
+import 'package:bloc/bloc.dart' show Bloc, Emitter;
 import 'package:dartz/dartz.dart';
 import 'package:ddd_notes/domain/auth/i_auth_facade.dart';
 import 'package:ddd_notes/domain/auth/value_objects.dart';
@@ -17,9 +19,122 @@ class SignInFormBloc extends Bloc<SignInFormEvent, SignInFormState> {
 
   SignInFormState get initialState => SignInFormState.initial();
 
-  SignInFormBloc(this._authFacade) : super(SignInFormState.initial());
+  SignInFormBloc(this._authFacade) : super(SignInFormState.initial()) {
+    on<EmailChanged>(_emailChanged);
+    on<PasswordChanged>(_passwordChanged);
+    on<RegisterWithEmailAndPasswordPressed>(
+        _registerWithEmailAndPasswordPressed);
+    on<SignInWithEmailAndPasswordPressed>(_signInWithEmailAndPasswordPressed);
+    on<SignInWithGooglePressed>(_signInWithGooglePressed);
+  }
 
-  @override
+  void _emailChanged(
+    EmailChanged event,
+    Emitter emitter,
+  ) {
+    emitter(
+      state.copyWith(
+        // pass in email string from event
+        emailAddress: EmailAddress(event.email),
+        // reset the response
+        authFailureOrSuccessOption: none(),
+      ),
+    );
+  }
+
+  void _passwordChanged(
+    PasswordChanged event,
+    Emitter emitter,
+  ) {
+    emitter(
+      state.copyWith(
+        password: Password(event.password),
+        authFailureOrSuccessOption: none(),
+      ),
+    );
+  }
+
+  void _registerWithEmailAndPasswordPressed(
+    RegisterWithEmailAndPasswordPressed event,
+    Emitter emitter,
+  ) async {
+    /// TODO: Code duplication: fix _performActionOnAuthFacadeWithEmailAndPassword
+    /*  _performActionOnAuthFacadeWithEmailAndPassword(
+      _authFacade.registerWithEmailAndPassword,
+    ); */
+    final isEmailValid = state.emailAddress.isValid();
+    final isPasswordValid = state.password.isValid();
+    Either<AuthFailure, Unit>? failureOrSuccess;
+
+    /// 1. check if given emailaddress and password are valid
+    if (isEmailValid && isPasswordValid) {
+      /// 2. if valid register using iauthfacade and yield some(right<unit>) in authfailureorsuccess
+
+      failureOrSuccess = await _authFacade.registerWithEmailAndPassword(
+        email: state.emailAddress,
+        password: state.password,
+      );
+    }
+    log('_registerWithEmailAndPasswordPressed ${failureOrSuccess.toString()}');
+
+    /// 3. if invalid, show error messages and set authfailureorsuccess as none()
+    emitter(
+      state.copyWith(
+        isSubmitting: false,
+        showErrorMessages: true,
+        authFailureOrSuccessOption: optionOf(failureOrSuccess),
+      ),
+    );
+  }
+
+  void _signInWithEmailAndPasswordPressed(
+    SignInWithEmailAndPasswordPressed event,
+    Emitter emitter,
+  ) async {
+    /*    log('why');
+    _performActionOnAuthFacadeWithEmailAndPassword(
+        emitter, _authFacade.signInWithEmailAndPassword); */
+    final isEmailValid = state.emailAddress.isValid();
+    final isPasswordValid = state.password.isValid();
+    Either<AuthFailure, Unit>? failureOrSuccess;
+
+    /// 1. check if given emailaddress and password are valid
+    if (isEmailValid && isPasswordValid) {
+      /// 2. if valid register using iauthfacade and yield some(right<unit>) in authfailureorsuccess
+
+      failureOrSuccess = await _authFacade.signInWithEmailAndPassword(
+        email: state.emailAddress,
+        password: state.password,
+      );
+    }
+    log('_signInWithEmailAndPasswordPressed ${failureOrSuccess.toString()}');
+
+    /// 3. if invalid, show error messages and set authfailureorsuccess as none()
+    emitter(
+      state.copyWith(
+        isSubmitting: false,
+        showErrorMessages: true,
+        authFailureOrSuccessOption: optionOf(failureOrSuccess),
+      ),
+    );
+  }
+
+  void _signInWithGooglePressed(
+    SignInWithGooglePressed event,
+    Emitter emitter,
+  ) async {
+    emitter(state.copyWith(
+      isSubmitting: true,
+      authFailureOrSuccessOption: none(),
+    ));
+    final failureOrSuccess = await _authFacade.signInWithGoogle();
+    emitter(state.copyWith(
+      isSubmitting: false,
+      authFailureOrSuccessOption: some(failureOrSuccess),
+    ));
+  }
+
+  /*  @override
   Stream<SignInFormState> mapEventToState(
     SignInFormEvent event,
   ) async* {
@@ -39,12 +154,12 @@ class SignInFormBloc extends Bloc<SignInFormEvent, SignInFormState> {
         );
       },
       registerWithEmailAndPasswordPressed: (e) async* {
-        yield* _performActionOnAuthFaacadeWithEmailAndPassword(
+        yield* _performActionOnAuthFacadeWithEmailAndPassword(
           _authFacade.registerWithEmailAndPassword,
         );
       },
       signInWithEmailAndPasswordPressed: (e) async* {
-        yield* _performActionOnAuthFaacadeWithEmailAndPassword(
+        yield* _performActionOnAuthFacadeWithEmailAndPassword(
             _authFacade.signInWithEmailAndPassword);
       },
       signInWithGooglePressed: (e) async* {
@@ -59,15 +174,14 @@ class SignInFormBloc extends Bloc<SignInFormEvent, SignInFormState> {
         );
       },
     );
-  }
+  } */
 
   /// sign in helper
-  Stream<SignInFormState> _performActionOnAuthFaacadeWithEmailAndPassword(
-    //SignInFormEvent event,
+  /* Future<SignInFormState> _performActionOnAuthFacadeWithEmailAndPassword(
     Future<Either<AuthFailure, Unit>> Function(
             {required EmailAddress email, required Password password})
         forwardedCall,
-  ) async* {
+  ) async {
     final isEmailValid = state.emailAddress.isValid();
     final isPasswordValid = state.password.isValid();
     Either<AuthFailure, Unit>? failureOrSuccess;
@@ -75,21 +189,21 @@ class SignInFormBloc extends Bloc<SignInFormEvent, SignInFormState> {
     /// 1. check if given emailaddress and password are valid
     if (isEmailValid && isPasswordValid) {
       /// 2. if valid register using iauthfacade and yield some(right<unit>) in authfailureorsuccess
-      yield state.copyWith(
-        isSubmitting: true,
-        authFailureOrSuccessOption: none(),
-      );
+
       failureOrSuccess = await forwardedCall(
         email: state.emailAddress,
         password: state.password,
       );
     }
+    log('_performActionOnAuthFacadeWithEmailAndPassword ${failureOrSuccess.toString()}');
+    // log('after emit ${state.toString()}');
 
     /// 3. if invalid, show error messages and set authfailureorsuccess as none()
-    yield state.copyWith(
+
+    return state.copyWith(
       isSubmitting: false,
       showErrorMessages: true,
       authFailureOrSuccessOption: optionOf(failureOrSuccess),
     );
-  }
+  } */
 }

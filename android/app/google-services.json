@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "915725689642",
+    "project_id": "ddd-notes-1222",
+    "storage_bucket": "ddd-notes-1222.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:915725689642:android:84a14735cf4e66e2ca7453",
+        "android_client_info": {
+          "package_name": "com.ratiebareeng.ddd_notes"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "915725689642-iv68ld7fo50rlbell7ap8bspqr8r5c2g.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ratiebareeng.ddd_notes",
+            "certificate_hash": "6c6770d7bd247ff0cafa886028ab68563df414bf"
+          }
+        },
+        {
+          "client_id": "915725689642-f39ntfhle12r4gq81if8rmjopmmn8tif.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBbcRxVt9CEWha67fDtuEkI8UhskRcf7lo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "915725689642-f39ntfhle12r4gq81if8rmjopmmn8tif.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

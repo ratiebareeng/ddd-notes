@@ -1,27 +1,31 @@
 import 'package:ddd_notes/injection.dart';
+import 'package:ddd_notes/presentation/core/app_widget.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:injectable/injectable.dart';
 
-void main() {
-  configureInjection(Environment.prod);
-  runApp(const MyApp());
-}
+import 'firebase_options.dart';
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
 
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'DDD Notes App',
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('DDD Notes'),
-        ),
-        body: const Center(
-          child: Text('Hello World'),
-        ),
-      ),
+  /* if (kIsWeb) {
+    await Firebase.initializeApp(
+      options: const FirebaseOptions(
+          apiKey: "",
+          authDomain: "",
+          databaseURL: "", // **DATABASEURL MUST BE GIVEN.**
+          projectId: "",
+          storageBucket: "",
+          messagingSenderId: "",
+          appId: ""),
     );
-  }
+  } else {
+    await Firebase.initializeApp();
+  } */
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  configureInjection(Environment.prod);
+  runApp(AppWidget());
 }

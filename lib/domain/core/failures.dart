@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../auth/value_objects.dart';
@@ -10,12 +12,26 @@ part 'failures.freezed.dart';
 @freezed
 abstract class ValueFailure<T> with _$ValueFailure<T> {
   /// union case for invalid email
-  const factory ValueFailure.invalidEmail({required String failedValue}) =
-      InvalidEmail<T>;
+  const factory ValueFailure.invalidEmail({
+    required T failedValue,
+  }) = InvalidEmail<T>;
 
   /// union case for short password
-  const factory ValueFailure.shortPassword({required String failedValue}) =
+  const factory ValueFailure.shortPassword({required T failedValue}) =
       ShortPassword<T>;
+
+  /// Notes failures
+  const factory ValueFailure.exceedingLength({
+    required T failedValue,
+    required int maxLength,
+  }) = ExceedingLength<T>;
+  // note body and todo body cannot be empty
+  const factory ValueFailure.empty({required T failedValue}) = Empty<T>;
+  // todo body cannot be multiline
+  const factory ValueFailure.multiline({required T failedValue}) = Multiline<T>;
+  //  list too long failure > 3 todos
+  const factory ValueFailure.listTooLong({required T failedValue}) =
+      ListTooLong<T>;
 }
 
 /// implementation
@@ -27,10 +43,12 @@ void showEmailAddressOrFailure() {
     (left) => 'Failure occured: $left',
     (right) => right,
   );
+  log(emailText);
 
   /// shorthand: doesn't tell you precisely what failure occurred
   /// because we don't have access to it
   String emailTextShortHand = emailAddress.value.getOrElse(
     () => 'Failure Occurred',
   );
+  log(emailTextShortHand);
 }
