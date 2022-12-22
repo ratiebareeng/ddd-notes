@@ -10,10 +10,17 @@
 include: package:flutter_lints/flutter.yaml
 
 analyser:
+  exclude:
+    - "**/*.g.dart"
+    - "**/*.freezed.dart"
   errors:
     body_might_complete_normally: error
     missing_return: error 
     must_be_immutable: error
+    # If you plan on using Freezed in combination with json_serializable, 
+    # recent versions of json_serializable and meta may require you to 
+    # disable the invalid_annotation_target warning.
+    invalid_annotation_target: ignore
      
 linter:
   # The lint rules applied to this project can be customized in the
