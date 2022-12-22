@@ -5,7 +5,7 @@ part of 'sign_in_form_bloc.dart';
 /// success regiater and sign in with email & password, sign in with google
 /// error "", invalid emaill address or password
 @freezed
-abstract class SignInFormState with _$SignInFormState {
+class SignInFormState with _$SignInFormState {
   const factory SignInFormState({
     required EmailAddress emailAddress,
     required Password password,

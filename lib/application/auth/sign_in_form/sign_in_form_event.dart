@@ -8,7 +8,7 @@ part of 'sign_in_form_bloc.dart';
 abstract class SignInFormEvent {}*/
 
 @freezed
-abstract class SignInFormEvent with _$SignInFormEvent {
+class SignInFormEvent with _$SignInFormEvent {
   const factory SignInFormEvent.emailChanged(String email) = EmailChanged;
   const factory SignInFormEvent.passwordChanged(String password) =
       PasswordChanged;
