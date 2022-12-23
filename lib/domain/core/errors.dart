@@ -1,6 +1,7 @@
 import 'package:ddd_notes/domain/core/failures.dart';
 
 /// used to crash the app
+class NotAuthenticatedError extends Error {}
 
 class UnexpectedValueError extends Error {
   final ValueFailure valueFailure;
