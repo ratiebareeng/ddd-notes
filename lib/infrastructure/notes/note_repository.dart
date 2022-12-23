@@ -10,6 +10,7 @@ import 'package:ddd_notes/infrastructure/notes/note_dtos.dart';
 import 'package:flutter/services.dart';
 import 'package:injectable/injectable.dart';
 import 'package:kt_dart/collection.dart';
+import 'package:rxdart/transformers.dart';
 
 @LazySingleton(as: INoteRepository)
 class NoteRepository implements INoteRepository {
@@ -91,9 +92,8 @@ class NoteRepository implements INoteRepository {
                 .map((noteDoc) => NoteDTO.fromFirestore(noteDoc).toDomain())
                 .toImmutableList(),
           ),
-        );
-    // TODO: Get RxDart
-/*         .onErrorReturnWith((e) {
+        )
+        .onErrorReturnWith((e, stackTrace) {
       if (e is PlatformException &&
           e.message != null &&
           e.message!.contains('PERMISSION_DENIED')) {
@@ -102,7 +102,7 @@ class NoteRepository implements INoteRepository {
         log(e.toString());
         return left(const NoteFailure.unexpected());
       }
-    }); */
+    });
   }
 
   @override
@@ -127,8 +127,8 @@ class NoteRepository implements INoteRepository {
                 )
                 .toImmutableList(),
           ),
-        );
-/*         .onErrorReturnWith((e) {
+        )
+        .onErrorReturnWith((e, stackTrace) {
       if (e is PlatformException &&
           e.message != null &&
           e.message!.contains('PERMISSION_DENIED')) {
@@ -137,6 +137,6 @@ class NoteRepository implements INoteRepository {
         log(e.toString());
         return left(const NoteFailure.unexpected());
       }
-    }); */
+    });
   }
 }
