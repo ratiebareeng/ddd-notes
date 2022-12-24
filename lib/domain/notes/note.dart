@@ -19,7 +19,7 @@ abstract class Note implements _$Note {
     required ListThree<TodoItem> todos,
   }) = _Note;
 
-  factory Note.initial() => Note(
+  factory Note.empty() => Note(
         id: UniqueId(),
         body: NoteBody(''),
         color: NoteColor(NoteColor.predefinedColors.first),
