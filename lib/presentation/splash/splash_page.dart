@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:auto_route/auto_route.dart';
 import 'package:ddd_notes/application/auth/auth_bloc.dart';
 import 'package:flutter/material.dart';
@@ -15,10 +13,9 @@ class SplashPage extends StatelessWidget {
         state.map(
           initial: (_) {},
           authenticated: (_) {
-            log('I am logged in');
+            context.router.replaceNamed('/notes-overview-page');
           },
           unAuthenticated: (_) {
-            log('I am NOT logged in');
             AutoRouter.of(context).replaceNamed('/sign-in-page');
           },
         );
